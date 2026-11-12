@@ -23,11 +23,11 @@ if (requestForm) {
   function updateRequest() {
     const pickup = fulfillment.value === 'pickup';
     const wasPickup = destination.options.length === 1 && destination.value === 'demo-store';
-    if (pickup && !wasPickup) destination.replaceChildren(new Option('Cedar Market fictional pickup desk', 'demo-store'));
-    if (!pickup && wasPickup) destination.replaceChildren(new Option('Alex Demo’s fictional home', 'demo-home'), new Option('Alex Demo’s fictional office', 'demo-office'));
+    if (pickup && !wasPickup) destination.replaceChildren(new Option('Cedar Market pickup desk', 'demo-store'));
+    if (!pickup && wasPickup) destination.replaceChildren(new Option('Home', 'demo-home'), new Option('Office', 'demo-office'));
     const total = (bouquetCatalog[bouquet.value].cents * Number(quantity.value) + (pickup ? 0 : 700)) / 100;
-    document.getElementById('flower-estimate').textContent = `Illustrative total: $${total.toFixed(2)} USD. The AI agent must confirm a server quote.`;
-    request.value = `I want a fictional flower order: ${quantity.value} ${bouquetCatalog[bouquet.value].name} bouquet(s), ${pickup ? 'pickup at' : 'demo delivery to'} ${destination.value}. Please quote it first and ask me to confirm. No real payment or delivery.`;
+    document.getElementById('flower-estimate').textContent = `Estimated total: $${total.toFixed(2)} USD. Your assistant will confirm the price.`;
+    request.value = `I'd like ${quantity.value} ${bouquetCatalog[bouquet.value].name} bouquet(s), ${pickup ? 'for pickup at' : 'delivered to'} ${destination.selectedOptions[0].textContent}. Please confirm the total before placing the order.`;
     feedback.textContent = '';
   }
   requestForm.addEventListener('submit', (event) => event.preventDefault());
@@ -35,7 +35,7 @@ if (requestForm) {
   document.getElementById('copy-flower-request').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(request.value);
-      feedback.textContent = 'Copied. Use this in the lab AI agent preview or your test conversation. No order was submitted.';
+      feedback.textContent = 'Copied. Share this request with your assistant. Your order has not been placed yet.';
     } catch {
       request.focus(); request.select();
       feedback.textContent = 'Select and copy the request above. No order was submitted.';
